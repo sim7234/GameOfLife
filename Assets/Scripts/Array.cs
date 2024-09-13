@@ -203,11 +203,11 @@ public class Array : MonoBehaviour
 
 
                 if (currentCell.stableForTime > whenStable)
-                    currentCell.stableForTime = whenStable;
+                    currentCell.stableForTime = whenStable + 1;
 
 
 
-                if (cellGrid[x, y].stableForTime == whenStable)
+                if (cellGrid[x, y].stableForTime >= whenStable)
                 {
                     cellGrid[x, y].spriteRenderer.color = Color.green;
                 }
@@ -230,7 +230,7 @@ public class Array : MonoBehaviour
                 //Color fade
                 if (cellGrid[x,y].alive == false)
                 {
-                    if (cellGrid[x, y].stableForTime < whenStable / 2)
+                    if (cellGrid[x, y].stableForTime < whenStable / 3)
                     {
                         cellGrid[x, y].spriteRenderer.color = new Color(1f, 0f, 0f, cellGrid[x, y].stableForTime * 0.1f);
                     }
