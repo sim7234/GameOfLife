@@ -41,6 +41,8 @@ public class Array : MonoBehaviour
     Vector2Int mousePosDelta;
     bool mouseClicked = false;
 
+    GameObject background;
+    SpriteRenderer backgroundSprite;
 
     bool drawing = false;
     bool erasing = false;
@@ -49,6 +51,8 @@ public class Array : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        background = GameObject.Find("Background");
+
         pause = false;
         camera = Camera.main;
         slider = Slider.FindAnyObjectByType<Slider>();
@@ -83,7 +87,10 @@ public class Array : MonoBehaviour
             
         }
         
-
+        background.transform.localScale = new Vector2(gridWidth, gridHeight);
+        background.layer = -1;
+        backgroundSprite = background.GetComponent<SpriteRenderer>();
+        backgroundSprite.color = Color.black;
     NextGen();
         
     }
