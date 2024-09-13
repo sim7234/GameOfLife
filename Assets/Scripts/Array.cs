@@ -36,8 +36,14 @@ public class Array : MonoBehaviour
 
     bool pause = false;
 
-    Vector2 mousePos;
+    Vector2Int mousePos;
+    Vector2Int lastMousePos;
+    Vector2Int mousePosDelta;
+    bool mouseClicked = false;
+
+
     bool drawing = false;
+    bool erasing = false;
 
 
     // Start is called before the first frame update
@@ -65,14 +71,14 @@ public class Array : MonoBehaviour
                 //Creates a Cell at the X,Y Cords that we will reference later to change prefabs enabled status.
                 cellGrid[x, y] = new Cell(0,true,sprite,x,y,0);
 
-                 rnd = Random.Range(0,10);
+              /*   rnd = Random.Range(0,10);
 
                if (rnd == 0)
                 {
                     cellGrid[x, y].alive = true;
                     
                 }
-                else cellGrid[x, y].alive = false;
+                else cellGrid[x, y].alive = false;*/
             }
             
         }
@@ -89,8 +95,11 @@ public class Array : MonoBehaviour
             pause = !pause;
         }
 
-        
 
+        if (mousePosDelta != Vector2.zero)
+        {
+            mouseClicked = false;
+        }
 
         if (Input.GetMouseButtonDown(0))
             drawing = true;
@@ -98,11 +107,18 @@ public class Array : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
             drawing = false;
 
-        mousePos = camera.ScreenToWorldPoint(Input.mousePosition);
+        if (Input.GetMouseButtonDown(1))
+            erasing = true;
 
-       
+        if (Input.GetMouseButtonUp(1))
+            erasing = false;
 
 
+        mousePos = Vector2Int.RoundToInt(camera.ScreenToWorldPoint(Input.mousePosition));
+        mousePosDelta = mousePos - lastMousePos;
+        
+
+        lastMousePos = Vector2Int.RoundToInt(camera.ScreenToWorldPoint(Input.mousePosition));
     }
 
     private void NextGen()
@@ -128,7 +144,7 @@ public class Array : MonoBehaviour
             ApplyRules();
         }
         else
-            Invoke("draw", waitTime);
+            Invoke(nameof(draw), waitTime);
 
         waitTime = slider.value;
 
@@ -136,13 +152,7 @@ public class Array : MonoBehaviour
             waitTime = waitTimeMinimum;
 
 
-        
-
-
-        
-            Invoke("NextGen", waitTime);
-       
-
+            Invoke(nameof(NextGen), waitTime);
     }
 
     void GetNeighbors(int x, int y)
@@ -260,21 +270,33 @@ public class Array : MonoBehaviour
     
     void draw()
     {
-        for (int x = 0; x < 3; x++)
+
+        if (!(mousePos.x > gridWidth || mousePos.y > gridHeight || mousePos.x < 0 || mousePos.y < 0))
         {
-            for (int y = 0; y < 3; y++)
+
+            if (drawing == true && mouseClicked == false && (mousePosDelta.x == 0 || mousePosDelta.y == 0))
             {
 
-                Debug.Log(cellGrid[x, y].position);
-               mousePos = new Vector2(Mathf.RoundToInt(mousePos.x),Mathf.RoundToInt(mousePos.y));
+                cellGrid[mousePos.x, mousePos.y].spriteRenderer.enabled = true;
+                cellGrid[mousePos.x, mousePos.y].alive = true;
+                cellGrid[mousePos.x, mousePos.y].spriteRenderer.color = Color.white;
 
-                if (cellGrid[x,y].position == mousePos)
-                {
-                    cellGrid[x, y].alive = false;
-                    cellGrid[x, y].spriteRenderer.enabled = cellGrid[x, y].alive;
-                }
+                mouseClicked = true;
+
+            }
+
+            if (erasing == true && mouseClicked == false && (mousePosDelta.x == 0 || mousePosDelta.y == 0))
+
+            {
+
+                cellGrid[mousePos.x, mousePos.y].spriteRenderer.enabled = false;
+                cellGrid[mousePos.x, mousePos.y].alive = false;
+                cellGrid[mousePos.x, mousePos.y].spriteRenderer.color = Color.white;
+
             }
         }
+
+
     }
 
     
