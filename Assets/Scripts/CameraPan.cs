@@ -13,10 +13,12 @@ public class CameraPan : MonoBehaviour
     public float panSpeed = 0.01f;
     bool isPanActive = false;
 
+    public float keySpeed = 1;
+
     // Start is called before the first frame update
     void Start()
     {
-        panSpeed = 0.01f;
+        panSpeed = 1f;
         camera = Camera.main;
         
     }
@@ -24,6 +26,25 @@ public class CameraPan : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            camera.transform.position += new Vector3(0, keySpeed * Time.deltaTime,0);
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            camera.transform.position += new Vector3(0, -keySpeed * Time.deltaTime, 0);
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            camera.transform.position += new Vector3(keySpeed * Time.deltaTime, 0, 0);
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            camera.transform.position += new Vector3(-keySpeed * Time.deltaTime, 0, 0);
+        }
+
+
         if (Input.GetMouseButtonDown(2))
         {
             isPanActive = true;
@@ -38,7 +59,7 @@ public class CameraPan : MonoBehaviour
         if (isPanActive == true)
         {
             mousePosDelta = (Vector2)camera.ScreenToWorldPoint(Input.mousePosition) - mouseLastPosition;
-            camera.transform.position += (Vector3)mousePosDelta * panSpeed;
+            camera.transform.position += (Vector3)mousePosDelta * panSpeed * Time.deltaTime;
         }
 
     }

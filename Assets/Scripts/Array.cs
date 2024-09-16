@@ -19,6 +19,7 @@ public class Array : MonoBehaviour
     //only used to instantiate prefabs with no rotation.
     Quaternion noRotation;
 
+    public int generateAmount = 10;
     int rnd;
 
     int currentCellX;
@@ -31,7 +32,7 @@ public class Array : MonoBehaviour
     public int aliveForRoundCount = 2;
     public int deadForRoundCount = -1;
 
-    Slider slider;
+    public Slider generationSpeedSlider;
     new Camera camera;
 
     bool pause = false;
@@ -41,6 +42,7 @@ public class Array : MonoBehaviour
     Vector2Int mousePosDelta;
     bool mouseClicked = false;
 
+    public GameObject background;
 
 
     bool drawing = false;
@@ -53,7 +55,7 @@ public class Array : MonoBehaviour
 
         pause = false;
         camera = Camera.main;
-        slider = Slider.FindAnyObjectByType<Slider>();
+        generationSpeedSlider = Slider.FindAnyObjectByType<Slider>();
 
         waitTimeMinimum = 0.05f;
 
@@ -71,27 +73,59 @@ public class Array : MonoBehaviour
                 //Creates a prefab (default is cube) at the X,Y Cords.
                 SpriteRenderer sprite = Instantiate(prefab, new Vector2(x,y), noRotation);
                 //Creates a Cell at the X,Y Cords that we will reference later to change prefabs enabled status.
-                cellGrid[x, y] = new Cell(0,true,sprite,x,y,0);
+                cellGrid[x, y] = new Cell(0,false,sprite,x,y,0);
 
-              /*   rnd = Random.Range(0,10);
 
-               if (rnd == 0)
-                {
-                    cellGrid[x, y].alive = true;
-                    
-                }
-                else cellGrid[x, y].alive = false;*/
+
+               
+
+                    rnd = Random.Range(0, 5);
+
+                    if (rnd == 0)
+                    {
+
+                        if (generateAmount > 0)
+                        {
+                            cellGrid[x, y].alive = true;
+                        }
+
+                    }
+
+                    if (rnd != 0)
+                    {
+                        cellGrid[x, y].alive = false;
+                    }
+
+
+                    if (generateAmount > 0)
+                    {
+                        generateAmount -= 1;
+                    }
+               
             }
             
         }
-        
+
+
+       GameObject backgroundVariable = Instantiate(background, Vector3.zero, noRotation);
+
+
+
+        backgroundVariable.transform.localScale = new Vector3(gridWidth, gridHeight, 0);
+        backgroundVariable.transform.position = new Vector3(gridWidth * 0.5f, gridHeight * 0.5f, 0);
         
     NextGen();
-        
     }
 
     private void Update()
     {
+
+        if (pause == true)
+        {
+            draw();
+        }
+
+        
         if (Input.GetKeyDown(KeyCode.Space))
         {
             pause = !pause;
@@ -115,8 +149,8 @@ public class Array : MonoBehaviour
         if (Input.GetMouseButtonUp(1))
             erasing = false;
 
-
-        mousePos = Vector2Int.RoundToInt(camera.ScreenToWorldPoint(Input.mousePosition));
+        //                                                          Vector 3 0.5f is needed because of changed pivot location from center to bottom left in CellPrefab
+        mousePos = Vector2Int.RoundToInt(camera.ScreenToWorldPoint(Input.mousePosition) - new Vector3(0.5f,0.5f,0));
         mousePosDelta = mousePos - lastMousePos;
         
 
@@ -145,10 +179,9 @@ public class Array : MonoBehaviour
 
             ApplyRules();
         }
-        else
-            Invoke(nameof(draw), waitTime);
+            
 
-        waitTime = slider.value;
+        waitTime = generationSpeedSlider.value;
 
         if (waitTime < waitTimeMinimum)
             waitTime = waitTimeMinimum;
@@ -273,7 +306,7 @@ public class Array : MonoBehaviour
     void draw()
     {
 
-        if (!(mousePos.x > gridWidth || mousePos.y > gridHeight || mousePos.x < 0 || mousePos.y < 0))
+        if (!(mousePos.x >= gridWidth || mousePos.y >= gridHeight || mousePos.x < 0 || mousePos.y < 0))
         {
 
             if (drawing == true && mouseClicked == false && (mousePosDelta.x == 0 || mousePosDelta.y == 0))
