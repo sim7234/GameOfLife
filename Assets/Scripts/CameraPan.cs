@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraPan : MonoBehaviour
 {
 
-    Camera camera;
+    new Camera camera;
 
     Vector2 mouseLastPosition;
     Vector2 mousePosDelta;

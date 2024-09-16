@@ -6,7 +6,7 @@ using UnityEngine;
 public class CameraZoom : MonoBehaviour
 {
 
-    Camera camera;
+    new Camera camera;
 
     float minZoom = 1f;
     float maxZoom = 1000f;
