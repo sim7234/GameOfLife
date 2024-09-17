@@ -3,7 +3,6 @@ using Random = UnityEngine.Random;
 using UnityEngine.UI;
 public class Array : MonoBehaviour
 {
-    
     public int gridWidth;
     public int gridHeight;
 
@@ -23,7 +22,7 @@ public class Array : MonoBehaviour
     public float waitTime = 1;
     float waitTimeMinimum;
 
-   public int whenStable = 30;
+    public int whenStable = 30;
     public int aliveForRoundCount = 2;
     public int deadForRoundCount = -1;
 
@@ -89,13 +88,11 @@ public class Array : MonoBehaviour
         {
             draw();
         }
-
         
         if (Input.GetKeyDown(KeyCode.Space))
         {
             pause = !pause;
         }
-
 
         if (mousePosDelta != Vector2.zero)
         {
@@ -138,8 +135,7 @@ public class Array : MonoBehaviour
                 }
             }
             ApplyRules();
-        }
-            
+        }  
 
         waitTime = generationSpeedSlider.value;
 
@@ -152,7 +148,6 @@ public class Array : MonoBehaviour
 
     void GetNeighbors(int x, int y)
     {
-
         for (int i = 0; i < 3; i++)
          {
              for (int j = 0; j < 3; j++)
@@ -244,40 +239,31 @@ public class Array : MonoBehaviour
                 {
                     cellGrid[x, y].spriteRenderer.enabled = true;
                 }
-
             }
-
         }
     }
 
     void draw()
     {
-
         if (!(mousePos.x >= gridWidth || mousePos.y >= gridHeight || mousePos.x < 0 || mousePos.y < 0))
         {
 
             if (drawing == true && mouseClicked == false && (mousePosDelta.x == 0 || mousePosDelta.y == 0))
             {
-
                 cellGrid[mousePos.x, mousePos.y].spriteRenderer.enabled = true;
                 cellGrid[mousePos.x, mousePos.y].alive = true;
                 cellGrid[mousePos.x, mousePos.y].spriteRenderer.color = Color.white;
 
                 mouseClicked = true;
-
             }
 
             if (erasing == true && mouseClicked == false && (mousePosDelta.x == 0 || mousePosDelta.y == 0))
-
             {
-
                 cellGrid[mousePos.x, mousePos.y].spriteRenderer.enabled = false;
                 cellGrid[mousePos.x, mousePos.y].alive = false;
                 cellGrid[mousePos.x, mousePos.y].spriteRenderer.color = Color.white;
-
             }
         }
-
     }
 
     void randomize(int percentAlive)
@@ -291,13 +277,11 @@ public class Array : MonoBehaviour
             percentAlive = 99;
 
 
-
         for (int x = 0; x < gridWidth; x++)
         {
             for (int y = 0; y < gridHeight; y++)
             {
                 rnd = Random.Range(0, 100);
-                
 
                 if (rnd < percentAlive)
                 {
@@ -307,14 +291,9 @@ public class Array : MonoBehaviour
                 {
                     cellGrid[x, y].alive = false;
                 }
-
             }
-
         }
-
     }
-
-
 }
     public class Cell
     {
