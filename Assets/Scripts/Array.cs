@@ -1,9 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
 using UnityEngine.UI;
 public class Array : MonoBehaviour
@@ -19,7 +14,7 @@ public class Array : MonoBehaviour
     //only used to instantiate prefabs with no rotation.
     Quaternion noRotation;
 
-    public int generateAmount = 10;
+    public int percentAlive = 10;
     int rnd;
 
     int currentCellX;
@@ -48,23 +43,18 @@ public class Array : MonoBehaviour
     bool drawing = false;
     bool erasing = false;
 
-
     // Start is called before the first frame update
     void Start()
     {
-
         pause = false;
         camera = Camera.main;
+
         generationSpeedSlider = Slider.FindAnyObjectByType<Slider>();
+        generationSpeedSlider.value = waitTime;
 
         waitTimeMinimum = 0.05f;
-
-        aliveForRoundCount = 2;
-        deadForRoundCount = 1;
         
-
         cellGrid = new Cell[gridWidth, gridHeight];
-        
 
         for (int x = 0; x < gridWidth; x++)
         {
@@ -77,48 +67,39 @@ public class Array : MonoBehaviour
 
 
 
-               
-
-                    rnd = Random.Range(0, 5);
-
-                    if (rnd == 0)
-                    {
-
-                        if (generateAmount > 0)
-                        {
-                            cellGrid[x, y].alive = true;
-                        }
-
-                    }
-
-                    if (rnd != 0)
-                    {
-                        cellGrid[x, y].alive = false;
-                    }
+                //Because rng counts from 0, but user does not.
 
 
-                    if (generateAmount > 0)
-                    {
-                        generateAmount -= 1;
-                    }
-               
+
             }
             
         }
+                percentAlive = percentAlive - 1;
+                   randomize(percentAlive);
 
 
        GameObject backgroundVariable = Instantiate(background, Vector3.zero, noRotation);
 
-
-
         backgroundVariable.transform.localScale = new Vector3(gridWidth, gridHeight, 0);
         backgroundVariable.transform.position = new Vector3(gridWidth * 0.5f, gridHeight * 0.5f, 0);
-        
-    NextGen();
+
+
+
+       
+
+
+
+
+        NextGen();
     }
 
     private void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            randomize(percentAlive);
+        }
 
         if (pause == true)
         {
@@ -156,6 +137,10 @@ public class Array : MonoBehaviour
 
         lastMousePos = Vector2Int.RoundToInt(camera.ScreenToWorldPoint(Input.mousePosition));
     }
+
+
+    
+
 
     private void NextGen()
     {
@@ -254,7 +239,7 @@ public class Array : MonoBehaviour
 
                 if (cellGrid[x, y].stableForTime >= whenStable)
                 {
-                    cellGrid[x, y].spriteRenderer.color = Color.green;
+                    cellGrid[x, y].spriteRenderer.color = Color.yellow;
                 }
 
 
@@ -266,7 +251,7 @@ public class Array : MonoBehaviour
 
                 if (cellGrid[x, y].stableForTime > whenStable / 3 && cellGrid[x, y].stableForTime < whenStable)
                 {
-                    cellGrid[x, y].spriteRenderer.color = Color.magenta;
+                    cellGrid[x, y].spriteRenderer.color = new Color(0.9622642f, 0.3393081f, 0, 1);
                 }
 
 
@@ -277,7 +262,7 @@ public class Array : MonoBehaviour
                 {
                     if (cellGrid[x, y].stableForTime < whenStable / 3)
                     {
-                        cellGrid[x, y].spriteRenderer.color = new Color(1f, 0f, 0f, cellGrid[x, y].stableForTime * 0.1f);
+                        cellGrid[x, y].spriteRenderer.color = new Color(1, 0f, 0f, cellGrid[x, y].stableForTime * 0.1f);
                     }
 
                     if (cellGrid[x, y].stableForTime <= 0)
@@ -334,7 +319,39 @@ public class Array : MonoBehaviour
 
     }
 
-    
+    void randomize(int percentAlive)
+    {
+        percentAlive--;
+
+        if (percentAlive < 0)
+            percentAlive = 0;
+
+        if (percentAlive > 99)
+            percentAlive = 99;
+
+
+
+        for (int x = 0; x < gridWidth; x++)
+        {
+            for (int y = 0; y < gridHeight; y++)
+            {
+                rnd = Random.Range(0, 100);
+                
+
+                if (rnd < percentAlive)
+                {
+                    cellGrid[x, y].alive = true;
+                }
+                else
+                {
+                    cellGrid[x, y].alive = false;
+                }
+
+            }
+
+        }
+
+    }
 
 
 }
