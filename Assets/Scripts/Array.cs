@@ -64,31 +64,15 @@ public class Array : MonoBehaviour
                 SpriteRenderer sprite = Instantiate(prefab, new Vector2(x,y), noRotation);
                 //Creates a Cell at the X,Y Cords that we will reference later to change prefabs enabled status.
                 cellGrid[x, y] = new Cell(0,false,sprite,x,y,0);
-
-
-
-                //Because rng counts from 0, but user does not.
-
-
-
             }
             
         }
-                percentAlive = percentAlive - 1;
-                   randomize(percentAlive);
-
+       randomize(percentAlive);
 
        GameObject backgroundVariable = Instantiate(background, Vector3.zero, noRotation);
 
         backgroundVariable.transform.localScale = new Vector3(gridWidth, gridHeight, 0);
         backgroundVariable.transform.position = new Vector3(gridWidth * 0.5f, gridHeight * 0.5f, 0);
-
-
-
-       
-
-
-
 
         NextGen();
     }
@@ -134,12 +118,8 @@ public class Array : MonoBehaviour
         mousePos = Vector2Int.RoundToInt(camera.ScreenToWorldPoint(Input.mousePosition) - new Vector3(0.5f,0.5f,0));
         mousePosDelta = mousePos - lastMousePos;
         
-
         lastMousePos = Vector2Int.RoundToInt(camera.ScreenToWorldPoint(Input.mousePosition));
     }
-
-
-    
 
 
     private void NextGen()
@@ -155,13 +135,8 @@ public class Array : MonoBehaviour
                     currentCell = cellGrid[x, y];
                     currentCell.numberOfNeighbors = 0;
                     GetNeighbors(x, y);
-
                 }
-
             }
-
-
-
             ApplyRules();
         }
             
@@ -199,6 +174,7 @@ public class Array : MonoBehaviour
     }
     void ApplyRules()
     {
+        //Loop through all cells in the grid
         for (int x = 0; x < gridWidth; x++)
         {
             for (int y = 0; y < gridHeight; y++)
@@ -207,7 +183,6 @@ public class Array : MonoBehaviour
 
                 if (currentCell.numberOfNeighbors < 2)
                     currentCell.alive = false;
-                
 
                 if (currentCell.numberOfNeighbors > 3)
                     currentCell.alive = false;
@@ -216,11 +191,9 @@ public class Array : MonoBehaviour
                     currentCell.alive = true;
 
 
+        //Apply color and turn on or off the sprite renderer
 
-
-                
-
-                //Checks if the cells or simulation is stable
+                //Counts if a cell has been alive more then or equal to the amount its been dead.
                 if (currentCell.alive)
                 {
                     //add more then we remove to highlight stable patterns as well as stable cells
@@ -234,7 +207,6 @@ public class Array : MonoBehaviour
 
                 if (currentCell.stableForTime > whenStable)
                     currentCell.stableForTime = whenStable + 1;
-
 
 
                 if (cellGrid[x, y].stableForTime >= whenStable)
@@ -255,8 +227,6 @@ public class Array : MonoBehaviour
                 }
 
 
-
-
                 //Color fade
                 if (cellGrid[x,y].alive == false)
                 {
@@ -275,19 +245,11 @@ public class Array : MonoBehaviour
                     cellGrid[x, y].spriteRenderer.enabled = true;
                 }
 
-                
-                
-                
-                
-                
             }
 
         }
     }
 
-
-
-    
     void draw()
     {
 
@@ -315,7 +277,6 @@ public class Array : MonoBehaviour
 
             }
         }
-
 
     }
 
@@ -371,7 +332,4 @@ public class Array : MonoBehaviour
         spriteRenderer = sprite;
         stableForTime = aliveTime;
     }
-
-
-
 }
