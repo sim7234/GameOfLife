@@ -121,6 +121,17 @@ public class Array : MonoBehaviour
 
     private void NextGen()
     {
+        if (pause == false)
+        {
+            for (int x = 0; x < gridWidth; x++)
+            {
+                for (int y = 0; y < gridHeight; y++)
+                {
+                    currentCell = cellGrid[x, y];
+                    currentCell.numberOfNeighbors = 0;
+                }
+            }
+        }
 
         if (pause == false)
         {
@@ -130,10 +141,10 @@ public class Array : MonoBehaviour
                 for (int y = 0; y < gridHeight; y++)
                 {
                     currentCell = cellGrid[x, y];
-                    currentCell.numberOfNeighbors = 0;
                     GetNeighbors(x, y);
                 }
             }
+
             ApplyRules();
         }  
 
@@ -148,6 +159,31 @@ public class Array : MonoBehaviour
 
     void GetNeighbors(int x, int y)
     {
+
+        //TODO: Currently Neighbors total neighbors isn't reset properly before the calculation, or neighbors isn't calculated properly.
+
+        if (currentCell.alive == true)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    Vector2 currentNeighbor = new Vector2(x + 1 - i, y + 1 - j);
+                    if (!(currentNeighbor.y >= gridHeight || currentNeighbor.x >= gridWidth || currentNeighbor.x < 0 || currentNeighbor.y < 0))
+                    {
+
+                         if (cellGrid[x + 1 - i, y + 1 - j].position != currentCell.position)
+                         {
+                            cellGrid[x + 1 - i, y + 1 - j].numberOfNeighbors++;
+                         }
+                        
+                    }
+                }
+            }
+        }
+
+
+
         for (int i = 0; i < 3; i++)
          {
              for (int j = 0; j < 3; j++)

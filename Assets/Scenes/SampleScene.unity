@@ -523,8 +523,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b5f73c9d343f194ab57c2719ec99ccc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridWidth: 250
-  gridHeight: 250
+  gridWidth: 100
+  gridHeight: 100
   prefab: {fileID: 2300195825776195428, guid: e226c802c51596b4aaf05b7b1bee5a9d, type: 3}
   percentAlive: 10
   waitTime: 0.5
