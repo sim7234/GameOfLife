@@ -3,44 +3,40 @@ using Random = UnityEngine.Random;
 using UnityEngine.UI;
 public class Array : MonoBehaviour
 {
+
+    //public variables
     public int gridWidth;
     public int gridHeight;
     public int numberOfCells;
-
-    public SpriteRenderer prefab;
-    Cell currentCell;
-    Cell[,] cellGrid;
-
-    //only used to instantiate prefabs with no rotation.
-    Quaternion noRotation;
-
-    public int percentAlive = 10;
-    int rnd;
-
-    int currentCellX;
-    int currentCellY;
-
-    public float waitTime = 1;
-    float waitTimeMinimum;
 
     public int whenStable = 30;
     public int aliveForRoundCount = 2;
     public int deadForRoundCount = -1;
     
+    public SpriteRenderer prefab;
+    public GameObject background;
+
+    //Private Variables
+    Cell currentCell;
+    Cell[,] cellGrid;
 
     Slider generationSpeedSlider;
     new Camera camera;
 
-    bool pause = false;
+    Quaternion noRotation;
+
+    public int percentAlive = 10;
+    int rnd;
+
+    public float waitTime = 1;
+    float waitTimeMinimum;
 
     Vector2Int mousePos;
     Vector2Int lastMousePos;
     Vector2Int mousePosDelta;
+
     bool mouseClicked = false;
-
-    public GameObject background;
-
-
+    bool pause = false;
     bool drawing = false;
     bool erasing = false;
 
@@ -51,7 +47,7 @@ public class Array : MonoBehaviour
         pause = false;
         camera = Camera.main;
 
-        generationSpeedSlider = Slider.FindAnyObjectByType<Slider>();
+        generationSpeedSlider = FindAnyObjectByType<Slider>();
         generationSpeedSlider.value = waitTime;
 
         waitTimeMinimum = 0.05f;
@@ -69,7 +65,7 @@ public class Array : MonoBehaviour
             }
             
         }
-       randomize(percentAlive);
+       Randomize(percentAlive);
 
        GameObject backgroundVariable = Instantiate(background, Vector3.zero, noRotation);
 
@@ -82,15 +78,14 @@ public class Array : MonoBehaviour
 
     private void Update()
     {
-
         if (Input.GetKeyDown(KeyCode.R))
         {
-            randomize(percentAlive);
+            Randomize(percentAlive);
         }
 
         if (pause == true)
         {
-            draw();
+            Draw();
         }
         
         if (Input.GetKeyDown(KeyCode.Space))
@@ -115,19 +110,15 @@ public class Array : MonoBehaviour
         if (Input.GetMouseButtonUp(1))
             erasing = false;
 
-        //                                                          Vector 3 0.5f is needed because of changed pivot location from center to bottom left in CellPrefab
+        //                                                          Vector3 0.5f is needed because of changed pivot location from center to bottom left in CellPrefab
         mousePos = Vector2Int.RoundToInt(camera.ScreenToWorldPoint(Input.mousePosition) - new Vector3(0.5f,0.5f,0));
         mousePosDelta = mousePos - lastMousePos;
         
         lastMousePos = Vector2Int.RoundToInt(camera.ScreenToWorldPoint(Input.mousePosition));
     }
 
-
     private void NextGen()
     {
-        
-
-
         if (pause == false)
         {
             for (int x = 0; x < gridWidth; x++)
@@ -140,8 +131,6 @@ public class Array : MonoBehaviour
             }
         }
         
-
-
         if (pause == false)
         {
 
@@ -169,29 +158,26 @@ public class Array : MonoBehaviour
     void GetNeighbors(int x, int y)
     {
 
-       
-        if (currentCell.alive == true)
+        if (currentCell.alive != true) 
+            return;
+        
+        for (int i = 0; i < 3; i++)
         {
-            for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
             {
-                for (int j = 0; j < 3; j++)
+                Vector2 currentNeighbor = new Vector2(x + 1 - i, y + 1 - j);
+                if (!(currentNeighbor.y >= gridHeight || currentNeighbor.x >= gridWidth || currentNeighbor.x < 0 || currentNeighbor.y < 0))
                 {
-                    Vector2 currentNeighbor = new Vector2(x + 1 - i, y + 1 - j);
-                    if (!(currentNeighbor.y >= gridHeight || currentNeighbor.x >= gridWidth || currentNeighbor.x < 0 || currentNeighbor.y < 0))
-                    {
 
-                         if (cellGrid[x + 1 - i, y + 1 - j].position != currentCell.position)
-                         {
-                            cellGrid[x + 1 - i, y + 1 - j].numberOfNeighbors += 1;
+                     if (cellGrid[x + 1 - i, y + 1 - j].position != currentCell.position)
+                     {
+                         cellGrid[x + 1 - i, y + 1 - j].numberOfNeighbors += 1;
 
-                        }
+                     }
 
-                    }
                 }
             }
         }
-
-
     }
     void ApplyRules()
     {
@@ -277,15 +263,12 @@ public class Array : MonoBehaviour
                 {
                     cellGrid[x, y].spriteRenderer.enabled = true;
                 }
-                
-                
-                
                
             }
         }
     }
 
-    void draw()
+    void Draw()
     {
         if (!(mousePos.x >= gridWidth || mousePos.y >= gridHeight || mousePos.x < 0 || mousePos.y < 0))
         {
@@ -308,7 +291,7 @@ public class Array : MonoBehaviour
         }
     }
 
-    void randomize(int percentAlive)
+    void Randomize(int percentAlive)
     {
         percentAlive--;
 
