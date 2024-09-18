@@ -5,6 +5,7 @@ public class Array : MonoBehaviour
 {
     public int gridWidth;
     public int gridHeight;
+    public int numberOfCells;
 
     public SpriteRenderer prefab;
     Cell currentCell;
@@ -25,8 +26,9 @@ public class Array : MonoBehaviour
     public int whenStable = 30;
     public int aliveForRoundCount = 2;
     public int deadForRoundCount = -1;
+    
 
-    public Slider generationSpeedSlider;
+    Slider generationSpeedSlider;
     new Camera camera;
 
     bool pause = false;
@@ -45,13 +47,14 @@ public class Array : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         pause = false;
         camera = Camera.main;
 
         generationSpeedSlider = Slider.FindAnyObjectByType<Slider>();
         generationSpeedSlider.value = waitTime;
 
-        waitTimeMinimum = 0.05f;
+        waitTimeMinimum = 0;
         
         cellGrid = new Cell[gridWidth, gridHeight];
 
@@ -73,6 +76,7 @@ public class Array : MonoBehaviour
         backgroundVariable.transform.localScale = new Vector3(gridWidth, gridHeight, 0);
         backgroundVariable.transform.position = new Vector3(gridWidth * 0.5f, gridHeight * 0.5f, 0);
 
+        numberOfCells = gridHeight * gridWidth;
         NextGen();
     }
 
@@ -121,6 +125,9 @@ public class Array : MonoBehaviour
 
     private void NextGen()
     {
+        
+
+
         if (pause == false)
         {
             for (int x = 0; x < gridWidth; x++)
@@ -132,6 +139,8 @@ public class Array : MonoBehaviour
                 }
             }
         }
+        
+
 
         if (pause == false)
         {
@@ -160,8 +169,7 @@ public class Array : MonoBehaviour
     void GetNeighbors(int x, int y)
     {
 
-        //TODO: Currently Neighbors total neighbors isn't reset properly before the calculation, or neighbors isn't calculated properly.
-
+       
         if (currentCell.alive == true)
         {
             for (int i = 0; i < 3; i++)
@@ -174,33 +182,15 @@ public class Array : MonoBehaviour
 
                          if (cellGrid[x + 1 - i, y + 1 - j].position != currentCell.position)
                          {
-                            cellGrid[x + 1 - i, y + 1 - j].numberOfNeighbors++;
-                         }
-                        
+                            cellGrid[x + 1 - i, y + 1 - j].numberOfNeighbors += 1;
+
+                        }
+
                     }
                 }
             }
         }
 
-
-
-        for (int i = 0; i < 3; i++)
-         {
-             for (int j = 0; j < 3; j++)
-             {
-                Vector2 currentNeighbor = new Vector2(x + 1 - i, y + 1 - j);
-                if (!(currentNeighbor.y >= gridHeight || currentNeighbor.x >= gridWidth || currentNeighbor.x < 0 || currentNeighbor.y < 0))
-                {
-                    if (cellGrid[x + 1 - i, y + 1 - j].alive)
-                    {
-                        if (cellGrid[x + 1 - i, y + 1 - j].position != currentCell.position)
-                        {
-                            currentCell.numberOfNeighbors++;
-                        }
-                    }
-                }
-             }
-         }
 
     }
     void ApplyRules()
@@ -213,10 +203,22 @@ public class Array : MonoBehaviour
                 currentCell = cellGrid[x, y];
 
                 if (currentCell.numberOfNeighbors < 2)
+                {
                     currentCell.alive = false;
+                    if (numberOfCells > 100000 && currentCell.spriteRenderer.enabled == true)
+                    {
+                        currentCell.spriteRenderer.enabled = false;
+                    }
+                }
 
                 if (currentCell.numberOfNeighbors > 3)
+                {
                     currentCell.alive = false;
+                    if (numberOfCells > 100000 && currentCell.spriteRenderer.enabled == true)
+                    {
+                        currentCell.spriteRenderer.enabled = false;
+                    }
+                }
 
                 if (currentCell.numberOfNeighbors == 3 && currentCell.alive == false)
                     currentCell.alive = true;
@@ -259,7 +261,7 @@ public class Array : MonoBehaviour
 
 
                 //Color fade
-                if (cellGrid[x,y].alive == false)
+                if (cellGrid[x, y].alive == false)
                 {
                     if (cellGrid[x, y].stableForTime < whenStable / 3)
                     {
@@ -275,6 +277,10 @@ public class Array : MonoBehaviour
                 {
                     cellGrid[x, y].spriteRenderer.enabled = true;
                 }
+                
+                
+                
+               
             }
         }
     }
