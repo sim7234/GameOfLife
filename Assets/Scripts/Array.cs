@@ -54,7 +54,7 @@ public class Array : MonoBehaviour
         generationSpeedSlider = Slider.FindAnyObjectByType<Slider>();
         generationSpeedSlider.value = waitTime;
 
-        waitTimeMinimum = 0;
+        waitTimeMinimum = 0.05f;
         
         cellGrid = new Cell[gridWidth, gridHeight];
 
