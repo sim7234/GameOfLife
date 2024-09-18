@@ -523,15 +523,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b5f73c9d343f194ab57c2719ec99ccc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridWidth: 1000
-  gridHeight: 1000
+  gridWidth: 300
+  gridHeight: 300
+  numberOfCells: 0
   prefab: {fileID: 2300195825776195428, guid: e226c802c51596b4aaf05b7b1bee5a9d, type: 3}
   percentAlive: 10
   waitTime: 0.5
   whenStable: 10
   aliveForRoundCount: 2
   deadForRoundCount: 1
-  generationSpeedSlider: {fileID: 0}
   background: {fileID: 7909487311839922505, guid: b9c210f07bece034190ee8d3535335e2, type: 3}
 --- !u!1 &1336212309
 GameObject:
