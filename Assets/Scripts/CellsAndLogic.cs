@@ -1,7 +1,7 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 using UnityEngine.UI;
-public class Array : MonoBehaviour
+public class CellsAndLogic : MonoBehaviour
 {
 
     //public variables
@@ -43,7 +43,6 @@ public class Array : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         pause = false;
         camera = Camera.main;
 
@@ -65,6 +64,7 @@ public class Array : MonoBehaviour
             }
             
         }
+
        Randomize(percentAlive);
 
        GameObject backgroundVariable = Instantiate(background, Vector3.zero, noRotation);
