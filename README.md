@@ -15,5 +15,12 @@ When stability reaches (When Stable) the Cell becomes Yellow, when its more then
 
 Percent alive: Is used when game runs or when the button R is pressed.
 
+If space is pressed the game will pause, allowing you to draaw or erase new cells with (left click/right click).
+
+To move the camera: Paning is middle mouse button, zooming is scrollwheel.
 
  If Prefabs are not in game: Prefab should have a default cube with changed pivot point (bottom left corner). Background should have a default cube, changed to black color.
+
+
+Some fun settings: Chaning Alive for round count to 1, And DeadFRC to 0, and when stable to 100 gives a nice growth effect.
+AFRC to 3, DFRC to 2 to see oscillator.
